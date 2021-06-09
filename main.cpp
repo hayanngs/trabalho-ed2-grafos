@@ -20,19 +20,18 @@ int main(void)
 
     vector<vector<string>> input;
     vector<struct Vertice> vertice;
-    vector<string> aeroporto;
-    vector<string> voo;
+    vector<vector<pair<int, int>>> adjlist;
+    map < string, int > indice_aeroporto; int count_aero = 0;
+    map < string, int > indice_voo; int count_voo = 0;
     string str;
 
     ifstream entrada("entrada.txt");
     while (getline(entrada, str))
-    {
-        //lendo arquivo e criando vetor de voo e aeroporto
+    { //lendo arquivo e criando vetor de voo e aeroporto
         vector<string> vet_string;
         string y = "";
         for (int i = 0, k = 0; str[i] != '\0'; i++)
-        {
-            //monta string por string
+        {//monta string por string
             if (str[i] != ' ')
             {
                 y += str[i];
@@ -41,25 +40,17 @@ int main(void)
             {
                 if (k == 1 || k == 3 || k == 6)
                 {//criar vetor de aeroportos
-                    bool entrou = true;
-                    for (int j = 0; j < (int)aeroporto.size(); j++)
+                    if (indice_aeroporto.find(y) == indice_aeroporto.end())
                     {
-                        if (y == aeroporto[j])
-                            entrou = false;
+                        indice_aeroporto.insert(pair<string, int>(y, count_aero++));
                     }
-                    if (entrou)
-                        aeroporto.push_back(y);
                 }
                 else if (k == 0)
                 {//criar vetor de voo
-                    bool entrou = true;
-                    for (int j = 0; j < (int)voo.size(); j++)
+                    if (indice_voo.find(y) == indice_voo.end())
                     {
-                        if (y == voo[j])
-                            entrou = false;
+                        indice_voo.insert(pair<string, int>(y, count_voo++));
                     }
-                    if (entrou)
-                        voo.push_back(y);
                 }
                 vet_string.push_back(y);
                 y.clear();
@@ -71,41 +62,70 @@ int main(void)
         input.push_back(vet_string);
     }
 
-    vector<vector<pair<int, int>>> adjlist;
-//    map< int, Vertice > mapa;
-    int k = 0;
-    for (int i = 0; i < (int)input.size(); i++)
+    //CRIAR VÉRTICES ORIGEM
+    vector <int> vector_aeroporto[count_aero];
+    for (int i = 0; i < count_aero; i++)
     {
         struct Vertice V;
-        V.i_voo = busca_indice(input[i][0], voo);
-        V.i_aero = busca_indice(input[i][1], aeroporto);
+        V.hora   = "00:00";
+        V.tipo   = 'O';
+        V.i_voo  = -1;
+        V.i_aero = i;
+        vertice.push_back(V);
+        vector<pair<int, int>> origem;
+        adjlist.push_back(origem);
+        vector_aeroporto[i].push_back(i);
+    }
+
+    //CRIAR VERTICES E MATRIZ DE ADJACENCIA
+
+    int k = count_aero;
+    for (int i = 0; i < (int)input.size(); i++)
+    {
+        vector<pair<int, int>> ADJ;
+        struct Vertice V;
+        int v1 = k++;
+        int v2 = k++;
+
+        V.i_voo = indice_voo.find(input[i][0])->second;
+        V.i_aero = indice_aeroporto.find(input[i][1])->second;
         V.hora = input[i][2];
         V.tipo = 'P';
-        vertice.push_back(V);
-        k++;
-        vector<pair<int, int> > vert;
+        vertice.push_back(V);                     //vetor de vértice struct
+        vector_aeroporto[V.i_aero].push_back(v1); //separar vértice por aeroporto
+        adjlist.push_back(ADJ);                   //acrescentando adjacência
+        adjlist[v1].push_back(pair<int, int>(v2, converte_hora(input[i][2], input[i][4])));
 
-        V.i_voo = busca_indice(input[i][0], voo);
-        V.i_aero = busca_indice(input[i][3], aeroporto);
+
+        V.i_aero = indice_aeroporto.find(input[i][3])->second;
         V.hora = input[i][4];
         V.tipo = 'C';
         vertice.push_back(V);
-        int c = converte_hora(input[i][2], input[i][4]);
-        vert.push_back(pair<int, int>(k, c));
+        vector_aeroporto[V.i_aero].push_back(v2); //separar vértice por aeroporto
+        adjlist.push_back(ADJ);                   //acrescentando adjacência
+
 
         if (input[i].size() > 5)
         {
-            V.i_voo = busca_indice(input[i][0], voo);
-            V.i_aero = busca_indice(input[i][3], aeroporto);
+            int v3 = k++;
+            int v4 = k++;
+            adjlist[v2].push_back(pair<int, int>(v3, converte_hora(input[i][4], input[i][5])));
+
+            V.i_aero = indice_aeroporto.find(input[i][3])->second;
             V.hora = input[i][5];
             V.tipo = 'P';
             vertice.push_back(V);
+            vector_aeroporto[V.i_aero].push_back(v3); //separar vértice por aeroporto
+            adjlist.push_back(ADJ);                   //acrescentando adjacência
 
-            V.i_voo = busca_indice(input[i][0], voo);
-            V.i_aero = busca_indice(input[i][6], aeroporto);
+            adjlist[v3].push_back(pair<int, int>(v4, converte_hora(input[i][5], input[i][7])));
+
+            V.i_aero = indice_aeroporto.find(input[i][6])->second;
             V.hora = input[i][7];
             V.tipo = 'C';
             vertice.push_back(V);
+            vector_aeroporto[V.i_aero].push_back(v4); //separar vértice por aeroporto
+            adjlist.push_back(ADJ);                   //acrescentando adjacência
         }
     }
 
