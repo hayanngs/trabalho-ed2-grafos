@@ -2,7 +2,6 @@
 
 using namespace std;
 
-int busca_indice(string str, vector<string> &vet);
 int converte_hora(string a, string b);
 
 struct Vertice{
@@ -130,18 +129,6 @@ int main(void)
     }
 
   return 0;
-}
-
-int busca_indice(string str, vector<string> &vet)
-{
-    for (int i = 0; i < (int)vet.size(); i++)
-    {
-        if (str == vet[i])
-        {
-            return i;
-        }
-    }
-    return -1;
 }
 
 int converte_hora(string a, string b)
