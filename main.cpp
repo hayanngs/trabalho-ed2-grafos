@@ -176,27 +176,55 @@ int main(void)
             }
         }
     }
-//    for (map < string, long int >::iterator it = indice_aeroporto.begin(); it != indice_aeroporto.end(); ++it)
-//    {
-//        cout << it->second << " - " << it->first << endl;
-//    }
-    //RUSHAR DIJKSTRA
-    //passar por parametro vetor de distância, quantidade de vértice, adjlist,
-    long int S = indice_aeroporto.find("Budapeste")->second;
-    long int D = indice_aeroporto.find("Bruxelas")->second;
-    cout << dijkstra(adjlist, vertice, vertice.size(), S, D) << endl;
-    vector<int> caminho;
-    printPath(caminho, D);
-    for (int i = 0; i < (int)caminho.size(); i++)
+
+    //TESTANDO TODOS OS CASOS
+    int i;
+    for (map < string, long int >::iterator at = indice_aeroporto.begin(); at != indice_aeroporto.end(); ++at)
     {
-        int id = caminho[i];
-        if (id != -1 && vertice[id].tipo != 'O')
+        for (map < string, long int >::iterator to = indice_aeroporto.begin(); to != indice_aeroporto.end(); ++to)
         {
-            string voo  = nome_voo.find(vertice[id].i_voo)->second;
-            string aero = nome_aeroporto.find(vertice[id].i_aero)->second;
-            cout << voo << " " << aero << " " << vertice[id].hora << endl;
+            if (at->second != to->second)
+            {
+                cout << "Origem: " << at->first << endl;
+                cout << "Destino: " << to->first << endl;
+                long int S = indice_aeroporto.find(at->first)->second;
+                long int D = indice_aeroporto.find(to->first)->second;
+                long int distancia = dijkstra(adjlist, vertice, vertice.size(), S, D);
+                cout << "Distância: " << distancia << endl;
+                vector<int> caminho;
+                printPath(caminho, D);
+                for (int i = 0; i < (int)caminho.size(); i++)
+                {
+                    int id = caminho[i];
+                    if (id != -1 && vertice[id].tipo != 'O')
+                    {
+                        string voo  = nome_voo.find(vertice[id].i_voo)->second;
+                        string aero = nome_aeroporto.find(vertice[id].i_aero)->second;
+                        cout << voo << " " << aero << " " << vertice[id].hora << endl;
+                    }
+                }
+                cout << "**********************************************************************" << endl;
+            }
         }
+        cin >> i;
     }
+
+    //RUSHAR DIJKSTRA
+//    long int S = indice_aeroporto.find("Xangai")->second;
+//    long int D = indice_aeroporto.find("BuenosAires")->second;
+//    cout << dijkstra(adjlist, vertice, vertice.size(), S, D) << endl;
+//    vector<int> caminho;
+//    printPath(caminho, D);
+//    for (int i = 0; i < (int)caminho.size(); i++)
+//    {
+//        int id = caminho[i];
+//        if (id != -1 && vertice[id].tipo != 'O')
+//        {
+//            string voo  = nome_voo.find(vertice[id].i_voo)->second;
+//            string aero = nome_aeroporto.find(vertice[id].i_aero)->second;
+//            cout << voo << " " << aero << " " << vertice[id].hora << endl;
+//        }
+//    }
 
   return 0;
 }
