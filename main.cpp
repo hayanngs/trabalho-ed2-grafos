@@ -124,8 +124,6 @@ int main(void)
             long int v3 = k++;
             long int v4 = k++;
             long int minuto = converte_hora(input[i][4], input[i][5]);
-            if (minuto < 30)
-                minuto += 1440;
             adjlist[v2].push_back(pair<long int, long int>(v3, minuto));
 
             V.i_aero = indice_aeroporto.find(input[i][3])->second;
@@ -210,29 +208,32 @@ int main(void)
     }
 
     //RUSHAR DIJKSTRA
-//    long int S = indice_aeroporto.find("Xangai")->second;
-//    long int D = indice_aeroporto.find("BuenosAires")->second;
+//    long int S = indice_aeroporto.find("Atenas")->second;
+//    long int D = indice_aeroporto.find("Bruxelas")->second;
 //    cout << dijkstra(adjlist, vertice, vertice.size(), S, D) << endl;
 //    vector<int> caminho;
 //    printPath(caminho, D);
 //    for (int i = 0; i < (int)caminho.size(); i++)
 //    {
 //        int id = caminho[i];
+//        printf("\ni[%d] | id[%d]\n", i, id);
 //        if (id != -1 && vertice[id].tipo != 'O')
 //        {
+//            printf("entrou:\n");
 //            string voo  = nome_voo.find(vertice[id].i_voo)->second;
 //            string aero = nome_aeroporto.find(vertice[id].i_aero)->second;
 //            cout << voo << " " << aero << " " << vertice[id].hora << endl;
 //        }
 //    }
 
-  return 0;
+    return 0;
 }
-
+//
+//linha 287
 long int dijkstra(vector<vector<pair<long int, long int>>> &adjlist, vector<struct Vertice> &vertice, long int N, long int S, long int D)
 {
     priority_queue<pair<long int, long int>, vector<pair<long int, long int> >, greater<pair<long int, long int> > > q;
-
+    priority_queue<pair<long int, long int>, vector<pair<long int, long int> >, greater<pair<long int, long int> > > vamos_ver;
     for (long int i = 0; i < N; i++)
     {
         dist[i] = 10000000000000;
@@ -249,8 +250,9 @@ long int dijkstra(vector<vector<pair<long int, long int>>> &adjlist, vector<stru
         q.pop();
         if (vertice[at].i_aero == D)
         {
-            pai[D] = at;
-            return dist[at];
+            vamos_ver.push(pair<long int, long int>(dist[at], at));
+//            pai[D] = at;
+//            return dist[at];
         }
 
         for (pair<long int, long int> it : adjlist[at])
@@ -266,14 +268,17 @@ long int dijkstra(vector<vector<pair<long int, long int>>> &adjlist, vector<stru
             }
         }
     }
-//    return dist[D];
+    pai[D] = vamos_ver.top().second;
+    return vamos_ver.top().first;
 }
 
 void printPath(vector<int> &caminho, int destiny )
 {
     if ( destiny != -1)
+    {
         printPath( caminho, pai[ destiny ]);
-    caminho.push_back(pai[destiny]);
+        caminho.push_back(destiny);
+    }
 }
 
 long int converte_hora(string a, string b)
