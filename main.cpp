@@ -2,6 +2,8 @@
 
 using namespace std;
 
+#define inf 10000000000000
+
 long int dist[2000];
 long int pai[2000];
 
@@ -72,7 +74,6 @@ int main(void)
             }
         }
         vet_string.push_back(y);
-
         input.push_back(vet_string);
     }
 
@@ -92,10 +93,12 @@ int main(void)
     }
 
     //CRIAR VERTICES E MATRIZ DE ADJACENCIA
-
     long int k = count_aero;
     for (long int i = 0; i < (long int)input.size(); i++)
     {
+        //[VOO]  [ VERTICE 1 ] [VERTICE 2] [V3 ] [VERTICE 4]
+        //   0      1      2    3      4     5    6      7
+        //IB8717 Madrid  12:00 LPGC  15:00 15:30 SCT   16:20
         vector<pair<long int, long int>> ADJ;
         struct Vertice V;
         long int v1 = k++;
@@ -166,7 +169,10 @@ int main(void)
                         {
                             int minuto = converte_hora(vertice[partida].hora, vertice[outro].hora);
                             if (minuto < 30)
+                            {
                                 minuto += 1440;
+                                cout << nome_voo.find(vertice[partida].i_voo)->second << endl;
+                            }
                             adjlist[partida].push_back(pair<long int, long int>(outro, minuto));
                         }
                     }
@@ -188,7 +194,13 @@ int main(void)
                 long int S = indice_aeroporto.find(at->first)->second;
                 long int D = indice_aeroporto.find(to->first)->second;
                 long int distancia = dijkstra(adjlist, vertice, vertice.size(), S, D);
-                cout << "Distância: " << distancia << endl;
+                if (distancia == -1 || distancia == inf)
+                {
+                    cout << "Não há rotas para essa origem e destino." << endl;
+                    cout << "**********************************************************************" << endl;
+                    continue;
+                }
+                cout << "Tempo min.: " << distancia << endl;
                 vector<int> caminho;
                 printPath(caminho, D);
                 for (int i = 0; i < (int)caminho.size(); i++)
@@ -204,22 +216,20 @@ int main(void)
                 cout << "**********************************************************************" << endl;
             }
         }
-        cin >> i;
+        //cin >> i;
     }
 
     //RUSHAR DIJKSTRA
-//    long int S = indice_aeroporto.find("Atenas")->second;
-//    long int D = indice_aeroporto.find("Bruxelas")->second;
+//    long int S = indice_aeroporto.find("SantaCruzTenerife")->second;
+//    long int D = indice_aeroporto.find("SantaCruzTenerife")->second;
 //    cout << dijkstra(adjlist, vertice, vertice.size(), S, D) << endl;
 //    vector<int> caminho;
 //    printPath(caminho, D);
 //    for (int i = 0; i < (int)caminho.size(); i++)
 //    {
 //        int id = caminho[i];
-//        printf("\ni[%d] | id[%d]\n", i, id);
 //        if (id != -1 && vertice[id].tipo != 'O')
 //        {
-//            printf("entrou:\n");
 //            string voo  = nome_voo.find(vertice[id].i_voo)->second;
 //            string aero = nome_aeroporto.find(vertice[id].i_aero)->second;
 //            cout << voo << " " << aero << " " << vertice[id].hora << endl;
@@ -228,15 +238,14 @@ int main(void)
 
     return 0;
 }
-//
-//linha 287
+
 long int dijkstra(vector<vector<pair<long int, long int>>> &adjlist, vector<struct Vertice> &vertice, long int N, long int S, long int D)
 {
     priority_queue<pair<long int, long int>, vector<pair<long int, long int> >, greater<pair<long int, long int> > > q;
     priority_queue<pair<long int, long int>, vector<pair<long int, long int> >, greater<pair<long int, long int> > > vamos_ver;
     for (long int i = 0; i < N; i++)
     {
-        dist[i] = 10000000000000;
+        dist[i] = inf;
         pai[i]  = -1;
         q.push(pair<long int, long int>(dist[i], i));
     }
@@ -268,8 +277,13 @@ long int dijkstra(vector<vector<pair<long int, long int>>> &adjlist, vector<stru
             }
         }
     }
-    pai[D] = vamos_ver.top().second;
-    return vamos_ver.top().first;
+    if (!vamos_ver.empty())
+    {
+        pai[D] = vamos_ver.top().second;
+        return vamos_ver.top().first;
+    }
+    else
+        return -1;
 }
 
 void printPath(vector<int> &caminho, int destiny )
