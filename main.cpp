@@ -14,7 +14,7 @@ typedef vector<struct Vertice>                   vet_vertice;
 typedef vector<vector<pair<long int, long int>>> Adjlist;
 
 #define inf 10000000000000
-#define arquivo "entrada.txt"
+#define arquivo "entrada2.txt"
 
 long int dist[2000];
 long int pai[2000];
@@ -572,16 +572,27 @@ void rodar_caso_tempo_livre(n_map &nome_aeroporto, n_map &nome_voo, Adjlist &adj
         cout << "> Tempo min.: " << distancia << endl << endl;
         vector<int> caminho;
         printPath(caminho, D);
+        int prox = 0;
         for (int i = 0; i < (int)caminho.size(); i++)
         {
             int id = caminho[i];
             if (id != -1 && vertice[id].tipo != 'O')
             {
-                string voo  = nome_voo.find(vertice[id].i_voo)->second;
-                string aero = nome_aeroporto.find(vertice[id].i_aero)->second;
-                cout << voo << " " << aero << " " << vertice[id].hora << endl;
+                if (vertice[id].i_voo != vertice[prox].i_voo)
+                {
+                    string voo  = nome_voo.find(vertice[id].i_voo)->second;
+                    string aero = nome_aeroporto.find(vertice[id].i_aero)->second;
+                    cout << "\n" << voo << " " << aero << " " << vertice[id].hora;// << endl;
+                }
+                else
+                {
+                    string aero = nome_aeroporto.find(vertice[id].i_aero)->second;
+                    cout << " " << aero << " " << vertice[id].hora;// << endl;
+                }
+                prox = id;
             }
         }
+        cout << endl;
     }
     else
     {
