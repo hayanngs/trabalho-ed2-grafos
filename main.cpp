@@ -6,24 +6,25 @@
 */
 using namespace std;
 
-typedef map < string, long int >                 i_map;
-typedef map < long int, string >                 n_map;
-typedef vector<vector<string>>                   vet_str;
-typedef vector < vector <long int> >             vet_aero;
-typedef vector<struct Vertice>                   vet_vertice;
-typedef vector<vector<pair<long int, long int>>> Adjlist;
+typedef long int                        li;
+typedef map < string, li >              i_map;
+typedef map < li, string >              n_map;
+typedef vector<vector<string>>          vet_str;
+typedef vector < vector <li> >          vet_aero;
+typedef vector<struct Vertice>          vet_vertice;
+typedef vector<vector<pair<li, li>>>    Adjlist;
 
 #define inf 10000000000000
-#define arquivo "entrada2.txt"
+#define arquivo "entrada.txt"
 
-long int dist[2000];
-long int pai[2000];
+li dist[2000];
+li pai[2000];
 
 //-----------------------------MONTANDO A ESTRUTURA----------------------------
-void entrada_arquivo(vet_str &input, i_map &indice_aeroporto, i_map &indice_voo, n_map &nome_aerporto, n_map &nome_voo, long int &count_voo, long int &count_aero);
-void criar_vertices_origem(long int count_aero, vet_aero &vector_aeroporto, Adjlist &adjlist, vet_vertice &vertice);
-void criar_vertices_matriz_adj(vet_str &input, i_map &indice_aeroporto, i_map &indice_voo, Adjlist &adjlist, vet_vertice &vertice, vet_aero &vector_aeroporto, long int &count_aero);
-void ligando_os_vertices(Adjlist &adjlist, vet_vertice &vertice,vet_aero &vector_aeroporto, long int count_aero);
+void entrada_arquivo(vet_str &input, i_map &indice_aeroporto, i_map &indice_voo, n_map &nome_aeroporto, n_map &nome_voo, li &count_voo, li &count_aero);
+void criar_vertices_origem(li count_aero, vet_aero &vector_aeroporto, Adjlist &adjlist, vet_vertice &vertice);
+void criar_vertices_matriz_adj(vet_str &input, i_map &indice_aeroporto, i_map &indice_voo, Adjlist &adjlist, vet_vertice &vertice, vet_aero &vector_aeroporto, li &count_aero);
+void ligando_os_vertices(Adjlist &adjlist, vet_vertice &vertice,vet_aero &vector_aeroporto, li count_aero);
 //-----------------------------------------------------------------------------
 
 //-----------------------------------EXECUÇÃO----------------------------------
@@ -32,22 +33,22 @@ void menu2(char &opcao);
 void listagem_aeroportos(n_map &nome_aero);
 void rodar_todos_os_casos(i_map &indice_aeroporto, n_map &nome_aeroporto, n_map &nome_voo, Adjlist &adjlist, vet_vertice &vertice);
 void rodar_caso_tempo_livre(n_map &nome_aeroporto, n_map &nome_voo, Adjlist &adjlist, vet_vertice &vertice, long S, long D);
-void rodar_caso_limitando_partida(n_map &nome_aeroporto, n_map &nome_voo, Adjlist &adjlist, vet_vertice &vertice, long int S, long int D, long int h_partida);
-void rodar_caso_limitando_chegada(n_map &nome_aeroporto, n_map &nome_voo, Adjlist &adjlist, vet_vertice &vertice, long int S, long int D, long int h_chegada);
-void rodar_caso_limitando_partida_chegada(n_map &nome_aeroporto, n_map &nome_voo, Adjlist &adjlist, vet_vertice &vertice, long int S, long int D, long int h_partida, long int h_chegada);
+void rodar_caso_limitando_partida(n_map &nome_aeroporto, n_map &nome_voo, Adjlist &adjlist, vet_vertice &vertice, li S, li D, li h_partida);
+void rodar_caso_limitando_chegada(n_map &nome_aeroporto, n_map &nome_voo, Adjlist &adjlist, vet_vertice &vertice, li S, li D, li h_chegada);
+void rodar_caso_limitando_partida_chegada(n_map &nome_aeroporto, n_map &nome_voo, Adjlist &adjlist, vet_vertice &vertice, li S, li D, li h_partida, li h_chegada);
 
-long int converte_hora(string a, string b);
-long int converte_hora_unica(string a);
-long int dijkstra(vector<vector<pair<long int, long int>>> &adjlist, vector<struct Vertice> &vertice, long int N, long int S, long int D);
-long int dijkstra_limitando_partida(vector<vector<pair<long int, long int>>> &adjlist, vector<struct Vertice> &vertice, long int N, long int S, long int D, long int h_partida);
-long int dijkstra_limitando_chegada(vector<vector<pair<long int, long int>>> &adjlist, vector<struct Vertice> &vertice, long int N, long int S, long int D, long int h_chegada);
-long int dijkstra_limitando_partida_chegada(vector<vector<pair<long int, long int>>> &adjlist, vector<struct Vertice> &vertice, long int N, long int S, long int D, long int h_partida, long int h_chegada);
+li converte_hora(string a, string b);
+li converte_hora_unica(string a);
+li dijkstra(vector<vector<pair<li, li>>> &adjlist, vector<struct Vertice> &vertice, li N, li S, li D);
+li dijkstra_limitando_partida(vector<vector<pair<li, li>>> &adjlist, vector<struct Vertice> &vertice, li N, li S, li D, li h_partida);
+li dijkstra_limitando_chegada(vector<vector<pair<li, li>>> &adjlist, vector<struct Vertice> &vertice, li N, li S, li D, li h_chegada);
+li dijkstra_limitando_partida_chegada(vector<vector<pair<li, li>>> &adjlist, vector<struct Vertice> &vertice, li N, li S, li D, li h_partida, li h_chegada);
 void printPath(vector<int> &caminho, int destiny );
 //-----------------------------------------------------------------------------
 
 struct Vertice{
-    long int i_voo;
-    long int i_aero;
+    li i_voo;
+    li i_aero;
     string hora;
     char tipo; //C = Chegada, P = Partida, O = Origem
 };
@@ -63,11 +64,11 @@ int main(void)
 
     i_map indice_aeroporto;
     n_map nome_aeroporto;
-    long int count_aero = 0;
+    li count_aero = 0;
 
     i_map indice_voo;
     n_map nome_voo;
-    long int count_voo = 0;
+    li count_voo = 0;
 //-----------------------------------------------------------------------------
 
 //-----------------------------MONTANDO A ESTRUTURA----------------------------
@@ -117,7 +118,7 @@ int main(void)
                 }
                     break;
                 case '4'://limitar hora de partida e chegada
-                {   
+                {
                     cout << "> Hora Partida: ";cin >> hora_partida;
                     cout << "> Hora Chegada: ";cin >> hora_chegada;
                     rodar_caso_limitando_partida_chegada(nome_aeroporto, nome_voo, adjlist, vertice, origem, destino, converte_hora_unica(hora_partida), converte_hora_unica(hora_chegada));
@@ -134,38 +135,38 @@ int main(void)
     return 0;
 }
 
-long int dijkstra(vector<vector<pair<long int, long int>>> &adjlist, vector<struct Vertice> &vertice, long int N, long int S, long int D)
+li dijkstra(vector<vector<pair<li, li>>> &adjlist, vector<struct Vertice> &vertice, li N, li S, li D)
 {
-    priority_queue<pair<long int, long int>, vector<pair<long int, long int> >, greater<pair<long int, long int> > > q;
-    priority_queue<pair<long int, long int>, vector<pair<long int, long int> >, greater<pair<long int, long int> > > vamos_ver;
-    for (long int i = 0; i < N; i++)
+    priority_queue<pair<li, li>, vector<pair<li, li> >, greater<pair<li, li> > > q;
+    priority_queue<pair<li, li>, vector<pair<li, li> >, greater<pair<li, li> > > vamos_ver;
+    for (li i = 0; i < N; i++)
     {
         dist[i] = inf;
         pai[i]  = -1;
-        q.push(pair<long int, long int>(dist[i], i));
+        q.push(pair<li, li>(dist[i], i));
     }
     dist[S] = 0;
-    q.push(pair<long int, long int>(dist[S], S));
+    q.push(pair<li, li>(dist[S], S));
 
     while (!q.empty())
     {
-        long int at = q.top().second;
+        li at = q.top().second;
         q.pop();
         if (vertice[at].i_aero == D)
         {
-            vamos_ver.push(pair<long int, long int>(dist[at], at));
+            vamos_ver.push(pair<li, li>(dist[at], at));
         }
 
-        for (pair<long int, long int> it : adjlist[at])
+        for (pair<li, li> it : adjlist[at])
         {
-            long int to = it.first;
-            long int G = it.second;
+            li to = it.first;
+            li G = it.second;
 
             if (dist[to] > dist[at] + G)
             {
                 dist[to] = dist[at] + G;
                 pai[to]  = at;
-                q.push(pair<long int, long int>(dist[to], to));
+                q.push(pair<li, li>(dist[to], to));
             }
         }
     }
@@ -178,40 +179,40 @@ long int dijkstra(vector<vector<pair<long int, long int>>> &adjlist, vector<stru
         return -1;
 }
 
-long int dijkstra_limitando_partida(vector<vector<pair<long int, long int>>> &adjlist, vector<struct Vertice> &vertice, long int N, long int S, long int D, long int h_partida)
+li dijkstra_limitando_partida(vector<vector<pair<li, li>>> &adjlist, vector<struct Vertice> &vertice, li N, li S, li D, li h_partida)
 {
-    priority_queue<pair<long int, long int>, vector<pair<long int, long int> >, greater<pair<long int, long int> > > q;
-    priority_queue<pair<long int, long int>, vector<pair<long int, long int> >, greater<pair<long int, long int> > > vamos_ver;
-    for (long int i = 0; i < N; i++)
+    priority_queue<pair<li, li>, vector<pair<li, li> >, greater<pair<li, li> > > q;
+    priority_queue<pair<li, li>, vector<pair<li, li> >, greater<pair<li, li> > > vamos_ver;
+    for (li i = 0; i < N; i++)
     {
         dist[i] = inf;
         pai[i]  = -1;
-        q.push(pair<long int, long int>(dist[i], i));
+        q.push(pair<li, li>(dist[i], i));
     }
     dist[S] = 0;
-    q.push(pair<long int, long int>(dist[S], S));
+    q.push(pair<li, li>(dist[S], S));
 
     while (!q.empty())
     {
-        long int at = q.top().second;
+        li at = q.top().second;
         q.pop();
-        long int horario_partida = converte_hora_unica(vertice[at].hora);
+        li horario_partida = converte_hora_unica(vertice[at].hora);
         if (horario_partida > h_partida && vertice[at].i_aero == vertice[S].i_aero) continue;
         if (vertice[at].i_aero == D)
         {
-            vamos_ver.push(pair<long int, long int>(dist[at], at));
+            vamos_ver.push(pair<li, li>(dist[at], at));
         }
 
-        for (pair<long int, long int> it : adjlist[at])
+        for (pair<li, li> it : adjlist[at])
         {
-            long int to = it.first;
-            long int G = it.second;
+            li to = it.first;
+            li G = it.second;
 
             if (dist[to] > dist[at] + G)
             {
                 dist[to] = dist[at] + G;
                 pai[to]  = at;
-                q.push(pair<long int, long int>(dist[to], to));
+                q.push(pair<li, li>(dist[to], to));
             }
         }
     }
@@ -224,40 +225,40 @@ long int dijkstra_limitando_partida(vector<vector<pair<long int, long int>>> &ad
         return -1;
 }
 
-long int dijkstra_limitando_chegada(vector<vector<pair<long int, long int>>> &adjlist, vector<struct Vertice> &vertice, long int N, long int S, long int D, long int h_chegada)
+li dijkstra_limitando_chegada(vector<vector<pair<li, li>>> &adjlist, vector<struct Vertice> &vertice, li N, li S, li D, li h_chegada)
 {
-    priority_queue<pair<long int, long int>, vector<pair<long int, long int> >, greater<pair<long int, long int> > > q;
-    priority_queue<pair<long int, long int>, vector<pair<long int, long int> >, greater<pair<long int, long int> > > vamos_ver;
-    for (long int i = 0; i < N; i++)
+    priority_queue<pair<li, li>, vector<pair<li, li> >, greater<pair<li, li> > > q;
+    priority_queue<pair<li, li>, vector<pair<li, li> >, greater<pair<li, li> > > vamos_ver;
+    for (li i = 0; i < N; i++)
     {
         dist[i] = inf;
         pai[i]  = -1;
-        q.push(pair<long int, long int>(dist[i], i));
+        q.push(pair<li, li>(dist[i], i));
     }
     dist[S] = 0;
-    q.push(pair<long int, long int>(dist[S], S));
+    q.push(pair<li, li>(dist[S], S));
 
     while (!q.empty())
     {
-        long int at = q.top().second;
+        li at = q.top().second;
         q.pop();
-        long int horario_chegada = converte_hora_unica(vertice[at].hora);
+        li horario_chegada = converte_hora_unica(vertice[at].hora);
         if (horario_chegada > h_chegada && vertice[at].i_aero == vertice[D].i_aero) continue;
         if (vertice[at].i_aero == D)
         {
-            vamos_ver.push(pair<long int, long int>(dist[at], at));
+            vamos_ver.push(pair<li, li>(dist[at], at));
         }
 
-        for (pair<long int, long int> it : adjlist[at])
+        for (pair<li, li> it : adjlist[at])
         {
-            long int to = it.first;
-            long int G = it.second;
+            li to = it.first;
+            li G = it.second;
 
             if (dist[to] > dist[at] + G)
             {
                 dist[to] = dist[at] + G;
                 pai[to]  = at;
-                q.push(pair<long int, long int>(dist[to], to));
+                q.push(pair<li, li>(dist[to], to));
             }
         }
     }
@@ -270,41 +271,41 @@ long int dijkstra_limitando_chegada(vector<vector<pair<long int, long int>>> &ad
         return -1;
 }
 
-long int dijkstra_limitando_partida_chegada(vector<vector<pair<long int, long int>>> &adjlist, vector<struct Vertice> &vertice, long int N, long int S, long int D, long int h_partida, long int h_chegada)
+li dijkstra_limitando_partida_chegada(vector<vector<pair<li, li>>> &adjlist, vector<struct Vertice> &vertice, li N, li S, li D, li h_partida, li h_chegada)
 {
-    priority_queue<pair<long int, long int>, vector<pair<long int, long int> >, greater<pair<long int, long int> > > q;
-    priority_queue<pair<long int, long int>, vector<pair<long int, long int> >, greater<pair<long int, long int> > > vamos_ver;
-    for (long int i = 0; i < N; i++)
+    priority_queue<pair<li, li>, vector<pair<li, li> >, greater<pair<li, li> > > q;
+    priority_queue<pair<li, li>, vector<pair<li, li> >, greater<pair<li, li> > > vamos_ver;
+    for (li i = 0; i < N; i++)
     {
         dist[i] = inf;
         pai[i]  = -1;
-        q.push(pair<long int, long int>(dist[i], i));
+        q.push(pair<li, li>(dist[i], i));
     }
     dist[S] = 0;
-    q.push(pair<long int, long int>(dist[S], S));
+    q.push(pair<li, li>(dist[S], S));
 
     while (!q.empty())
     {
-        long int at = q.top().second;
+        li at = q.top().second;
         q.pop();
-        long int horario = converte_hora_unica(vertice[at].hora);
+        li horario = converte_hora_unica(vertice[at].hora);
         if (horario > h_partida && vertice[at].i_aero == vertice[S].i_aero) continue;
         if (horario > h_chegada && vertice[at].i_aero == vertice[D].i_aero) continue;
         if (vertice[at].i_aero == D)
         {
-            vamos_ver.push(pair<long int, long int>(dist[at], at));
+            vamos_ver.push(pair<li, li>(dist[at], at));
         }
 
-        for (pair<long int, long int> it : adjlist[at])
+        for (pair<li, li> it : adjlist[at])
         {
-            long int to = it.first;
-            long int G = it.second;
+            li to = it.first;
+            li G = it.second;
 
             if (dist[to] > dist[at] + G)
             {
                 dist[to] = dist[at] + G;
                 pai[to]  = at;
-                q.push(pair<long int, long int>(dist[to], to));
+                q.push(pair<li, li>(dist[to], to));
             }
         }
     }
@@ -326,12 +327,12 @@ void printPath(vector<int> &caminho, int destiny )
     }
 }
 
-long int converte_hora(string a, string b)
+li converte_hora(string a, string b)
 {
-    long int i = a.size()-1;
-    long int minuto_a = 0;
-    long int minuto_b = 0;
-    long int pot = 1;
+    li i = a.size()-1;
+    li minuto_a = 0;
+    li minuto_b = 0;
+    li pot = 1;
     while (a[i] != ':')
     {
         minuto_a += (a[i] - 48)*pot;
@@ -346,15 +347,15 @@ long int converte_hora(string a, string b)
         minuto_b += ((b[i--] - 48)*pot)*60;
         pot *= 10;
     }
-    long int diferenca = minuto_b - minuto_a;
+    li diferenca = minuto_b - minuto_a;
     return diferenca < 0? diferenca + 1440 : diferenca;
 }
 
-long int converte_hora_unica(string a)
+li converte_hora_unica(string a)
 {
-    long int i = a.size()-1;
-    long int minuto_a = 0;
-    long int pot = 1;
+    li i = a.size()-1;
+    li minuto_a = 0;
+    li pot = 1;
     while (a[i] != ':')
     {
         minuto_a += (a[i--] - 48)*pot;
@@ -382,7 +383,7 @@ void entrada_arquivo(vet_str &input, i_map &indice_aeroporto, i_map &indice_voo,
     { //lendo arquivo e criando vetor de voo e aeroporto
         vector<string> vet_string;
         string y = "";
-        for (long int i = 0, k = 0; str[i] != '\0'; i++)
+        for (li i = 0, k = 0; str[i] != '\0'; i++)
         {//monta string por string
             if (str[i] != ' ')
             {
@@ -394,16 +395,16 @@ void entrada_arquivo(vet_str &input, i_map &indice_aeroporto, i_map &indice_voo,
                 {//criar vetor de aeroportos
                     if (indice_aeroporto.find(y) == indice_aeroporto.end())
                     {
-                        nome_aeroporto.insert(pair<long int, string>(count_aero, y));
-                        indice_aeroporto.insert(pair<string, long int>(y, count_aero++));
+                        nome_aeroporto.insert(pair<li, string>(count_aero, y));
+                        indice_aeroporto.insert(pair<string, li>(y, count_aero++));
                     }
                 }
                 else if (k == 0)
                 {//criar vetor de voo
                     if (indice_voo.find(y) == indice_voo.end())
                     {
-                        nome_voo.insert(pair<long int, string>(count_voo, y));
-                        indice_voo.insert(pair<string, long int>(y, count_voo++));
+                        nome_voo.insert(pair<li, string>(count_voo, y));
+                        indice_voo.insert(pair<string, li>(y, count_voo++));
                     }
                     else
                         cout << "VOO FDP AQUI: " << y << endl;
@@ -418,15 +419,15 @@ void entrada_arquivo(vet_str &input, i_map &indice_aeroporto, i_map &indice_voo,
     }
 }
 
-void criar_vertices_matriz_adj(vet_str &input, i_map &indice_aeroporto, i_map &indice_voo, Adjlist &adjlist, vet_vertice &vertice,vet_aero &vector_aeroporto, long int &count_aero)
+void criar_vertices_matriz_adj(vet_str &input, i_map &indice_aeroporto, i_map &indice_voo, Adjlist &adjlist, vet_vertice &vertice,vet_aero &vector_aeroporto, li &count_aero)
 {
-    long int k = count_aero;
-    for (long int i = 0; i < (long int)input.size(); i++)
+    li k = count_aero;
+    for (li i = 0; i < (li)input.size(); i++)
     {
-        vector<pair<long int, long int>> ADJ;
+        vector<pair<li, li>> ADJ;
         struct Vertice V;
-        long int v1 = k++;
-        long int v2 = k++;
+        li v1 = k++;
+        li v2 = k++;
 
         V.i_voo = indice_voo.find(input[i][0])->second;
         V.i_aero = indice_aeroporto.find(input[i][1])->second;
@@ -435,7 +436,7 @@ void criar_vertices_matriz_adj(vet_str &input, i_map &indice_aeroporto, i_map &i
         vertice.push_back(V);                     //vetor de vértice struct
         vector_aeroporto[V.i_aero].push_back(v1); //separar vértice por aeroporto
         adjlist.push_back(ADJ);                   //acrescentando adjacência
-        adjlist[v1].push_back(pair<long int, long int>(v2, converte_hora(input[i][2], input[i][4])));
+        adjlist[v1].push_back(pair<li, li>(v2, converte_hora(input[i][2], input[i][4])));
 
 
         V.i_aero = indice_aeroporto.find(input[i][3])->second;
@@ -448,10 +449,10 @@ void criar_vertices_matriz_adj(vet_str &input, i_map &indice_aeroporto, i_map &i
 
         if (input[i].size() > 5)
         {
-            long int v3 = k++;
-            long int v4 = k++;
-            long int minuto = converte_hora(input[i][4], input[i][5]);
-            adjlist[v2].push_back(pair<long int, long int>(v3, minuto));
+            li v3 = k++;
+            li v4 = k++;
+            li minuto = converte_hora(input[i][4], input[i][5]);
+            adjlist[v2].push_back(pair<li, li>(v3, minuto));
 
             V.i_aero = indice_aeroporto.find(input[i][3])->second;
             V.hora = input[i][5];
@@ -460,7 +461,7 @@ void criar_vertices_matriz_adj(vet_str &input, i_map &indice_aeroporto, i_map &i
             vector_aeroporto[V.i_aero].push_back(v3); //separar vértice por aeroporto
             adjlist.push_back(ADJ);                   //acrescentando adjacência
 
-            adjlist[v3].push_back(pair<long int, long int>(v4, converte_hora(input[i][5], input[i][7])));
+            adjlist[v3].push_back(pair<li, li>(v4, converte_hora(input[i][5], input[i][7])));
 
             V.i_aero = indice_aeroporto.find(input[i][6])->second;
             V.hora = input[i][7];
@@ -472,11 +473,11 @@ void criar_vertices_matriz_adj(vet_str &input, i_map &indice_aeroporto, i_map &i
     }
 }
 
-void criar_vertices_origem(long int count_aero, vet_aero &vector_aeroporto, Adjlist &adjlist, vet_vertice &vertice)
+void criar_vertices_origem(li count_aero, vet_aero &vector_aeroporto, Adjlist &adjlist, vet_vertice &vertice)
 {
-    for (long int i = 0; i < count_aero; i++)
+    for (li i = 0; i < count_aero; i++)
     {
-        vector <long int> int_aero;
+        vector <li> int_aero;
         vector_aeroporto.push_back(int_aero);
         struct Vertice V;
         V.hora   = "00:00";
@@ -484,31 +485,31 @@ void criar_vertices_origem(long int count_aero, vet_aero &vector_aeroporto, Adjl
         V.i_voo  = -1;
         V.i_aero = i;
         vertice.push_back(V);
-        vector<pair<long int, long int>> origem;
+        vector<pair<li, li>> origem;
         adjlist.push_back(origem);
         vector_aeroporto[i].push_back(i);
     }
 }
 
-void ligando_os_vertices(Adjlist &adjlist, vet_vertice &vertice,vet_aero &vector_aeroporto, long int count_aero)
+void ligando_os_vertices(Adjlist &adjlist, vet_vertice &vertice,vet_aero &vector_aeroporto, li count_aero)
 {
-    for (long int i = 0; i < count_aero; i++)
+    for (li i = 0; i < count_aero; i++)
     {
-        long int origem = vector_aeroporto[i][0];
-        for (long int j = 1; j < (long int)vector_aeroporto[i].size(); j++)
+        li origem = vector_aeroporto[i][0];
+        for (li j = 1; j < (li)vector_aeroporto[i].size(); j++)
         {
-            long int partida = vector_aeroporto[i][j];
+            li partida = vector_aeroporto[i][j];
             if (vertice[partida].tipo == 'P')
             {
-                adjlist[origem].push_back(pair<long int, long int>(partida, 0));
+                adjlist[origem].push_back(pair<li, li>(partida, 0));
             }
             else
             {
                 if (vertice[partida].tipo == 'C')
                 {
-                    for (long int y = 1; y < (long int)vector_aeroporto[i].size(); y++)
+                    for (li y = 1; y < (li)vector_aeroporto[i].size(); y++)
                     {
-                        long int outro = vector_aeroporto[i][y];
+                        li outro = vector_aeroporto[i][y];
                         if (vertice[outro].tipo == 'P')
                         {
                             int minuto = converte_hora(vertice[partida].hora, vertice[outro].hora);
@@ -516,7 +517,7 @@ void ligando_os_vertices(Adjlist &adjlist, vet_vertice &vertice,vet_aero &vector
                             {
                                 minuto += 1440;
                             }
-                            adjlist[partida].push_back(pair<long int, long int>(outro, minuto));
+                            adjlist[partida].push_back(pair<li, li>(outro, minuto));
                         }
                     }
                 }
@@ -527,17 +528,17 @@ void ligando_os_vertices(Adjlist &adjlist, vet_vertice &vertice,vet_aero &vector
 
 void rodar_todos_os_casos(i_map &indice_aeroporto, n_map &nome_aeroporto, n_map &nome_voo, Adjlist &adjlist, vet_vertice &vertice)
 {
-    for (map < string, long int >::iterator at = indice_aeroporto.begin(); at != indice_aeroporto.end(); ++at)
+    for (map < string, li >::iterator at = indice_aeroporto.begin(); at != indice_aeroporto.end(); ++at)
     {
-        for (map < string, long int >::iterator to = indice_aeroporto.begin(); to != indice_aeroporto.end(); ++to)
+        for (map < string, li >::iterator to = indice_aeroporto.begin(); to != indice_aeroporto.end(); ++to)
         {
             if (at->second != to->second)
             {
                 cout << "Origem: " << at->first << endl;
                 cout << "Destino: " << to->first << endl;
-                long int S = indice_aeroporto.find(at->first)->second;
-                long int D = indice_aeroporto.find(to->first)->second;
-                long int distancia = dijkstra(adjlist, vertice, vertice.size(), S, D);
+                li S = indice_aeroporto.find(at->first)->second;
+                li D = indice_aeroporto.find(to->first)->second;
+                li distancia = dijkstra(adjlist, vertice, vertice.size(), S, D);
                 if (distancia == -1 || distancia == inf)
                 {
                     cout << "> Não há rota." << endl;
@@ -564,9 +565,9 @@ void rodar_todos_os_casos(i_map &indice_aeroporto, n_map &nome_aeroporto, n_map 
     }
 }
 
-void rodar_caso_tempo_livre(n_map &nome_aeroporto, n_map &nome_voo, Adjlist &adjlist, vet_vertice &vertice, long int S, long int D)
+void rodar_caso_tempo_livre(n_map &nome_aeroporto, n_map &nome_voo, Adjlist &adjlist, vet_vertice &vertice, li S, li D)
 {
-    long int distancia = dijkstra(adjlist, vertice, vertice.size(), S, D);
+    li distancia = dijkstra(adjlist, vertice, vertice.size(), S, D);
     if (distancia != -1 && distancia != inf)
     {
         cout << "> Tempo min.: " << distancia << endl << endl;
@@ -600,9 +601,9 @@ void rodar_caso_tempo_livre(n_map &nome_aeroporto, n_map &nome_voo, Adjlist &adj
     }
 }
 
-void rodar_caso_limitando_partida(n_map &nome_aeroporto, n_map &nome_voo, Adjlist &adjlist, vet_vertice &vertice, long int S, long int D, long int h_partida)
+void rodar_caso_limitando_partida(n_map &nome_aeroporto, n_map &nome_voo, Adjlist &adjlist, vet_vertice &vertice, li S, li D, li h_partida)
 {
-    long int distancia = dijkstra_limitando_partida(adjlist, vertice, vertice.size(), S, D, h_partida);
+    li distancia = dijkstra_limitando_partida(adjlist, vertice, vertice.size(), S, D, h_partida);
     if (distancia != -1 && distancia != inf)
     {
         cout << "> Tempo min.: " << distancia << endl << endl;
@@ -625,9 +626,9 @@ void rodar_caso_limitando_partida(n_map &nome_aeroporto, n_map &nome_voo, Adjlis
     }
 }
 
-void rodar_caso_limitando_chegada(n_map &nome_aeroporto, n_map &nome_voo, Adjlist &adjlist, vet_vertice &vertice, long int S, long int D, long int h_chegada)
+void rodar_caso_limitando_chegada(n_map &nome_aeroporto, n_map &nome_voo, Adjlist &adjlist, vet_vertice &vertice, li S, li D, li h_chegada)
 {
-    long int distancia = dijkstra_limitando_chegada(adjlist, vertice, vertice.size(), S, D, h_chegada);
+    li distancia = dijkstra_limitando_chegada(adjlist, vertice, vertice.size(), S, D, h_chegada);
     if (distancia != -1 && distancia != inf)
     {
         cout << "> Tempo min.: " << distancia << endl << endl;
@@ -650,9 +651,9 @@ void rodar_caso_limitando_chegada(n_map &nome_aeroporto, n_map &nome_voo, Adjlis
     }
 }
 
-void rodar_caso_limitando_partida_chegada(n_map &nome_aeroporto, n_map &nome_voo, Adjlist &adjlist, vet_vertice &vertice, long int S, long int D, long int h_partida, long int h_chegada)
+void rodar_caso_limitando_partida_chegada(n_map &nome_aeroporto, n_map &nome_voo, Adjlist &adjlist, vet_vertice &vertice, li S, li D, li h_partida, li h_chegada)
 {
-    long int distancia = dijkstra_limitando_partida_chegada(adjlist, vertice, vertice.size(), S, D, h_partida, h_chegada);
+    li distancia = dijkstra_limitando_partida_chegada(adjlist, vertice, vertice.size(), S, D, h_partida, h_chegada);
     if (distancia != -1 && distancia != inf)
     {
         cout << "> Tempo min.: " << distancia << endl << endl;
